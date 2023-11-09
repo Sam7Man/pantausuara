@@ -7,6 +7,8 @@ import AuthLogin from '../auth/auth-login';
 
 /* eslint-disable arrow-body-style */
 const LoginPage = () => {
+  console.log('API: ', import.meta.env.VITE_API_URL)
+
   return (
     <PageContainer title="Login" description="Login page">
       <Box

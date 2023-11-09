@@ -1,5 +1,5 @@
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -16,6 +16,9 @@ export default defineConfig({
       },
     }),
   ],
+  define: {
+    __APP_ENV__: process.env.VITE_VERCEL_ENV,
+  },
   resolve: {
     alias: [
       {
