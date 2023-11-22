@@ -27,6 +27,9 @@ export default function SuaraPieChart({ title, subheader, chartData }) {
   const chartOptions = {
     chart: {
       type: 'donut',
+      toolbar: {
+        show: true,
+      },
       height: CHART_HEIGHT,
     },
     labels: chartData.labels,

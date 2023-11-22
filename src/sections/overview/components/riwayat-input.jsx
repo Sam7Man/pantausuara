@@ -32,8 +32,8 @@ const RiwayatInput = ({ lastSummaryInput, suaraData, timsesData }) => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6">Recent Actions</Typography>
-        <Typography variant="body1">Last Input: {formatIndonesianDate(lastSummaryInput)}</Typography>
+        <Typography variant="h6" m="5px 0px 0px 5px" >Recent Actions</Typography>
+        <Typography variant="body1" m="0px 0px 0px 5px" sx={{ fontSize: '14px', fontWeight: 400, lineHeight: '22px', color: '#637381' }}>Action Logs</Typography>
         <Timeline position="right">
           {combinedData.slice(0, 4).map((item, index) => (
             <TimelineItem key={item.id}>
@@ -65,9 +65,9 @@ const RiwayatInput = ({ lastSummaryInput, suaraData, timsesData }) => {
 };
 
 RiwayatInput.propTypes = {
-  lastSummaryInput: PropTypes.string, // You should replace 'any' with the actual type expected for this prop.
-  suaraData: PropTypes.array.isRequired, // Assuming suaraData is an array and is required.
-  timsesData: PropTypes.array.isRequired, // Assuming timsesData is an array and is required.
+  lastSummaryInput: PropTypes.string, 
+  suaraData: PropTypes.array.isRequired,
+  timsesData: PropTypes.array.isRequired,
 };
 
 export default RiwayatInput;

@@ -21,9 +21,10 @@ LogsData.propTypes = {
     type: PropTypes.oneOf(['Suara', 'Timses']).isRequired,
     searchQuery: PropTypes.string.isRequired,
     sortOrder: PropTypes.string.isRequired,
+    userId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-export default function LogsData({ fetchData, type, searchQuery, sortOrder }) {
+export default function LogsData({ fetchData, type, searchQuery, sortOrder, userId }) {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
@@ -34,7 +35,8 @@ export default function LogsData({ fetchData, type, searchQuery, sortOrder }) {
             setLoading(true);
             try {
                 const response = await fetchData();
-                setLogs(response.data);
+                const userLogs = response.data.filter(log => log.user_id === userId);
+                setLogs(userLogs);
             } catch (error) {
                 console.error('Error fetching logs:', error);
             }
@@ -42,7 +44,7 @@ export default function LogsData({ fetchData, type, searchQuery, sortOrder }) {
         };
 
         fetchLogs();
-    }, [fetchData]);
+    }, [fetchData, userId]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);

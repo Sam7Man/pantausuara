@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useState, useCallback, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { jwtDecode } from 'jwt-decode';
@@ -14,37 +14,36 @@ export const UserProvider = ({ children }) => {
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const token = Cookies.get('token');
-                if (!token) {
-                    return;
-                }
+    const fetchUserData = useCallback(async () => {
+        try {
+            const token = Cookies.get('token');
+            if (!token) return;
 
-                const decodedToken = jwtDecode(token);
-                setUserId(decodedToken.sub);
-                setUserEmail(decodedToken.name);
+            const decodedToken = jwtDecode(token);
+            setUserId(decodedToken.sub);
+            setUserEmail(decodedToken.name);
 
-                const response = await userGetId(decodedToken.sub);
-                if (response && response.data) {
-                    setUserName(response.data.name);
-                }
-            } catch (err) {
-                console.error("Error fetching user data:", err);
+            const response = await userGetId(decodedToken.sub);
+            if (response && response.data) {
+                setUserName(response.data.name);
             }
-        };
-
-        fetchUserData();
+        } catch (err) {
+            console.error("Error fetching user data:", err);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchUserData();
+    }, [fetchUserData]);
 
     const contextValue = useMemo(() => ({
         userId,
         userEmail,
         userName,
         setUserName,
-        setUserEmail
-    }), [userId, userEmail, userName, setUserName, setUserEmail]);
+        setUserEmail,
+        fetchUserData
+    }), [userId, userEmail, userName, setUserName, setUserEmail, fetchUserData]);
 
     return (
         <UserContext.Provider value={contextValue}>

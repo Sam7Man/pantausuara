@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 
 import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import CustomTextField from 'src/components/forms/custom-text-fields';
 
@@ -29,6 +30,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [loginError, setLoginError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -60,7 +62,10 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
         validatePassword();
 
         if (!emailError && !passwordError) {
+            setIsLoading(true); // Set loading true
             const loginSuccess = await handleLogin(email, password);
+            setIsLoading(false); // Set loading false after login attempt
+
             if (!loginSuccess) {
                 setLoginError('Email atau password salah!');
             }
@@ -139,8 +144,8 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                 </Stack>
             </Stack>
             <Box>
-                <Button color="primary" variant="contained" size="large" fullWidth type="submit">
-                    Masuk
+                <Button color="primary" variant="contained" size="large" fullWidth type="submit" disabled={isLoading}>
+                    {isLoading ? <CircularProgress size={24} /> : 'Masuk'}
                 </Button>
             </Box>
             {loginError && !emailError && !passwordError && (

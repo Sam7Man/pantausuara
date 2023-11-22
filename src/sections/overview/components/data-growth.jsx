@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import Chart from 'react-apexcharts';
 import { parseISO, format, startOfMonth, isSameMonth, isSameYear } from 'date-fns';
 import { Select, MenuItem } from '@mui/material';
@@ -7,16 +8,37 @@ import { getSuara } from 'src/sections/authentication/api-request/Suara';
 import { getTimses } from 'src/sections/authentication/api-request/Timses';
 import DashboardCardChart from './dashboard-card-chart';
 
-const DataGrowth = () => {
+const DataGrowth = ({ user_id }) => {
     const [suaraData, setSuaraData] = useState([]);
     const [timsesData, setTimsesData] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM'));
+    // const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM'));
+    const [selectedDate, setSelectedDate] = useState('');
+
+    const uniqueDates = useMemo(() => {
+        return Array.from(new Set([...suaraData, ...timsesData]
+            .map(item => format(parseISO(item.CreatedAt), 'yyyy-MM'))))
+            .sort();
+    }, [suaraData, timsesData]);
+
+    useEffect(() => {
+        const currentMonth = format(new Date(), 'yyyy-MM');
+        if (uniqueDates.length > 0) {
+            if (uniqueDates.includes(currentMonth)) {
+                setSelectedDate(currentMonth);
+            } else {
+                setSelectedDate(uniqueDates[0]);
+            }
+        } else {
+            setSelectedDate('');
+        }
+    }, [uniqueDates]);
 
     useEffect(() => {
         const fetchSuara = async () => {
             try {
                 const response = await getSuara();
-                setSuaraData(response.data);
+                const filteredSuara = response.data.filter(item => item.user_id === user_id);
+                setSuaraData(filteredSuara);
             } catch (error) {
                 console.error('Error fetching suara data:', error);
             }
@@ -25,7 +47,8 @@ const DataGrowth = () => {
         const fetchTimses = async () => {
             try {
                 const response = await getTimses();
-                setTimsesData(response.data);
+                const filteredTimses = response.data.filter(item => item.user_id === user_id);
+                setTimsesData(filteredTimses);
             } catch (error) {
                 console.error('Error fetching timses data:', error);
             }
@@ -33,7 +56,7 @@ const DataGrowth = () => {
 
         fetchSuara();
         fetchTimses();
-    }, []);
+    }, [user_id]);
 
     const processData = (data, name) => {
         const countsByDate = data.reduce((acc, item) => {
@@ -82,7 +105,6 @@ const DataGrowth = () => {
         },
         yaxis: {
             min: 0,
-            tickAmount: 4,
             labels: {
                 formatter: (value) => Math.floor(value)
             }
@@ -127,7 +149,7 @@ const DataGrowth = () => {
         setSelectedDate(newValue === "Show All Data" ? "" : newValue);
     };
 
-    const uniqueDates = Array.from(new Set([...suaraData, ...timsesData].map(item => format(parseISO(item.CreatedAt), 'yyyy-MM')))).sort();
+    // const uniqueDates = Array.from(new Set([...suaraData, ...timsesData].map(item => format(parseISO(item.CreatedAt), 'yyyy-MM')))).sort();
 
     return (
         <DashboardCardChart
@@ -156,6 +178,10 @@ const DataGrowth = () => {
             />
         </DashboardCardChart>
     );
+};
+
+DataGrowth.propTypes = {
+    user_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
 export default DataGrowth;

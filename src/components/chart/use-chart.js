@@ -93,7 +93,6 @@ export default function useChart(options) {
 
     // Grid
     grid: {
-      strokeDashArray: 3,
       borderColor: theme.palette.divider,
       xaxis: {
         lines: {

@@ -9,12 +9,14 @@ import LogsData from './logs-data';
 import LogsSort from './logs-sort';
 import LogsSearch from './logs-search';
 
+import { useUser } from 'src/sections/authentication/user/user-context';
 import { getSuara } from 'src/sections/authentication/api-request/Suara';
 import { getTimses } from 'src/sections/authentication/api-request/Timses';
 import { Stack } from '@mui/material';
 
 
 export default function LogTabs() {
+    const { userId } = useUser();
     const [value, setValue] = useState('1');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortOrder, setSortOrder] = useState('latest');
@@ -56,6 +58,7 @@ export default function LogTabs() {
                         type="Suara"
                         searchQuery={searchQuery}
                         sortOrder={sortOrder}
+                        userId={userId}
                     />
                 </TabPanel>
                 <TabPanel value="2">
@@ -74,6 +77,7 @@ export default function LogTabs() {
                         type="Timses"
                         searchQuery={searchQuery}
                         sortOrder={sortOrder}
+                        userId={userId}
                     />
                 </TabPanel>
             </TabContext>

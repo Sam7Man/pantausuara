@@ -35,7 +35,7 @@ export default function SuaraTableForm({ open, onClose, dialogMode, dataForEdit 
 
 
     useEffect(() => {
-        fetchTimses(); 
+        fetchTimses();
         // eslint-disable-next-line
     }, []);
 
@@ -75,6 +75,7 @@ export default function SuaraTableForm({ open, onClose, dialogMode, dataForEdit 
                 setSelectedTimsesId(dataForEdit.timses_id);
             } else {
                 setFormData(initialFormData);
+                setSelectedTimsesId(''); // Reset the Timses selection when switching to ADD mode
             }
         }
 
@@ -146,7 +147,7 @@ export default function SuaraTableForm({ open, onClose, dialogMode, dataForEdit 
 
             await fetchSuara();
             handleDialogClose();
-            // window.location.reload();
+            window.location.reload();
         } catch (error) {
             console.error('Error submitting form:', error);
             setApiError('Error submitting form');
@@ -187,6 +188,18 @@ export default function SuaraTableForm({ open, onClose, dialogMode, dataForEdit 
                                 </Select>
                             </Grid>
                             <Grid item>
+                                <Divider orientation="vertical" sx={{ borderWidth: 1, borderColor: 'rgba(0,0,0,0.2)' }} />
+                            </Grid>
+                            <Grid item>
+                                <Typography
+                                    name="select-timses"
+                                    variant="subtitle1"
+                                    fontWeight={600}
+                                    component="label"
+                                    mb={5}
+                                >
+                                    Pilih Timses
+                                </Typography>
                                 <Select
                                     labelId='select-timses'
                                     id='select-timses'

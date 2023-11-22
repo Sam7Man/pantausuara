@@ -140,9 +140,9 @@ const ProfilePage = () => {
 };
 
 PasswordInput.propTypes = {
-    value: PropTypes.string.isRequired, // Assuming 'value' is a string and is required.
-    label: PropTypes.string, // Assuming 'label' is a string but not required.
-    onChange: PropTypes.func.isRequired, // Expecting 'onChange' to be a function and required.
+    value: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
 };
 
 export default ProfilePage;

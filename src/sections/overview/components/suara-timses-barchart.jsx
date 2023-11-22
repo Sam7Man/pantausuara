@@ -7,11 +7,18 @@ import { fNumber } from 'src/utils/format-number';
 import Chart, { useChart } from 'src/components/chart';
 
 
-export default function SuaraDaerahBarChart({ title, subheader, chart, ...other }) {
-  const { colors, series, options } = chart;
+export default function SuaraTimsesBarChart({ title, subheader, chart, ...other }) {
+  const { colors, series } = chart;
   const chartSeries = series.map((i) => i.value);
 
   const chartOptions = useChart({
+    chart: {
+      type: 'bar',
+      fontFamily: "'Alegreya Sans', sans-serif;",
+      toolbar: {
+          show: true,
+      },
+    },
     colors,
     tooltip: {
       marker: { show: false },
@@ -21,18 +28,37 @@ export default function SuaraDaerahBarChart({ title, subheader, chart, ...other 
           formatter: () => 'Suara: ',
         },
       },
+      style: {
+        fontSize: '14px',
+        colors: 'rgba(0,0,0,0.7)',
+      },
     },
     plotOptions: {
       bar: {
         horizontal: true,
         barHeight: '28%',
-        borderRadius: 2,
+        borderRadius: 5,
       },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          fontSize: '14px',
+          fontWeight: 'bold',
+          colors: 'rgba(0,0,0,0.7)',
+        },
+      }
     },
     xaxis: {
       categories: series.map((i) => i.label),
+      labels: {
+        formatter: (value) => Math.floor(value),
+        style: {
+          fontSize: '14px',
+          colors: 'rgba(0,0,0,0.7)',
+        },
+      }
     },
-    ...options,
   });
 
   return (
@@ -46,17 +72,13 @@ export default function SuaraDaerahBarChart({ title, subheader, chart, ...other 
           options={chartOptions}
           width="100%"
           height={364}
-          sx={{
-            typography: 'body1',
-            fontFamily: `'Alegreya Sans',sans-serif`,
-          }}
         />
       </Box>
     </Card>
   );
 }
 
-SuaraDaerahBarChart.propTypes = {
+SuaraTimsesBarChart.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,
