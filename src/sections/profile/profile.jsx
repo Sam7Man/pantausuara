@@ -5,6 +5,7 @@ import { Box, TextField, Button, Alert, Stack, Typography, Divider, IconButton, 
 import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 
 import { useUser } from '../authentication/user/user-context';
+import { encryptPassword } from '../authentication/auth/EncryptPassword';
 import { userChangePassword } from '../authentication/api-request/User';
 
 const PasswordInput = ({ value, label, onChange }) => {
@@ -56,7 +57,7 @@ const ProfilePage = () => {
 
         try {
             await userChangePassword({
-                old_password: currentPassword,
+                old_password: encryptPassword(currentPassword),
                 new_password: newPassword
             });
             setCurrentPassword("");
@@ -93,6 +94,10 @@ const ProfilePage = () => {
                 >
                     <Typography variant="h4">My Profile</Typography>
                     <Divider />
+                    <Stack spacing={2}>
+                        {error && <Alert variant="outlined" severity="error" color="primary">{error}</Alert>}
+                        {successMessage && <Alert variant="outlined" severity="success">{successMessage}</Alert>}
+                    </Stack>
                     <TextField sx={{ mt: 1 }}
                         label="Email"
                         value={email}
@@ -121,10 +126,6 @@ const ProfilePage = () => {
                         value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
-                    <Stack spacing={2}>
-                        {error && <Alert variant="outlined" severity="error" color="secondary">{error}</Alert>}
-                        {successMessage && <Alert variant="outlined" severity="success">{successMessage}</Alert>}
-                    </Stack>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <Button type="submit" variant="contained" color="primary">
                             Submit
